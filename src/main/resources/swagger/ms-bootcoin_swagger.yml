@@ -1,0 +1,216 @@
+openapi: 3.0.1
+info:
+  title: Microservicio de BootCoin
+  version: 1.0.0
+  description: |
+    Microservicio se encargará de gestionar todas las funcionalidades relacionadas con el servicio P2P con su moneda virtual BootCoin.
+  termsOfService: https://www.example.com/terms
+  contact:
+    email: vertkle@gmail.com
+  license:
+    name: Licencia MIT
+    url: https://www.example.com/license
+servers:
+  - url: http://localhost:8080/api/v1
+
+
+paths:
+  /rate:
+    get:
+      operationId: getRate
+      summary: Obtener la tasa de compra y venta de soles a bootcoin
+      tags:
+        - Rate
+      responses:
+        '200':
+          description: Rate obtenido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rate'
+    post:
+      operationId: createRate
+      summary: crear la tasa de compra y venta, si existe actualizar
+      tags:
+        - Rate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rate'
+      responses:
+        '201':
+          description: Rate creado
+        '400':
+          description: Error en parámetros
+
+  /user_bootcoin:
+    get:
+      operationId: getAllUserBootcoin
+      summary: Obtener todos los users bootcoin
+      tags:
+        - User Bootcoin
+      responses:
+        '200':
+          description: Lista de usersBootcoin obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserBootcoin'
+    post:
+      operationId: createUserBootcoin
+      summary: Agregar UserBootcoin
+      tags:
+        - User Bootcoin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBootcoin'
+      responses:
+        '201':
+          description: UserBootcoin creada exitosamente
+        '400':
+          description: Error en Request
+    put:
+      operationId: updateUserBootcoin
+      summary: update balance Bootcoin
+      tags:
+        - User Bootcoin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBootcoin'
+      responses:
+        '200':
+          description: UserBootcoin actualizado exitosamente
+        '400':
+          description: Error en Request
+
+  /user_bootcoin/{user_id}:
+    get:
+      operationId: getUserBootcoinById
+      summary: Obtener detalle de UserBootcoin
+      tags:
+        - User Bootcoin
+      parameters:
+        - name: user_id
+          in: path
+          description: ID del user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalle de Wallet obtenido exitosamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBootcoin'
+        '400':
+          description: Error en request
+        '404':
+          description: Recurso no encontrado
+
+  /transaction:
+    get:
+      operationId: getAllTransaction
+      summary: Obtener todos las transacciones realizadas.
+      tags:
+        - Transacciones
+      responses:
+        '200':
+          description: Lista de transacciones obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionBootcoin'
+    post:
+      operationId: createTransaction
+      summary: Agregar transaction
+      tags:
+        - Transacciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionBootcoin'
+      responses:
+        '201':
+          description: Transaction creada exitosamente
+        '400':
+          description: Error en Request
+
+  /transaction/accept_exchange:
+    put:
+      operationId: accepetExchangeTransaction
+      summary: Vendedor acepta transacción
+      tags:
+        - Transacciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionBootcoin'
+      responses:
+        '200':
+          description: se actualizó correctamente
+        '400':
+          description: Error en Request
+
+
+
+components:
+  schemas:
+    Rate:
+      type: object
+      properties:
+        rateBootcoin:
+          type: number
+        dateSet:
+          type: string
+
+    UserBootcoin:
+      type: object
+      properties:
+        id:
+          type: string
+        typeIdentification:
+          type: string
+        numberIdentification:
+          type: string
+        numberPhone:
+          type: string
+        email:
+          type: string
+        balanceBootcoin:
+          type: number
+
+    TransactionBootcoin:
+      type: object
+      properties:
+        id:
+          type: string
+        idUserBuy:
+          type: string
+        mountBuy:
+          type: number
+        mountSolesCalculated:
+          type: number
+        modePayment:
+          type: string
+        idUserSeller:
+          type: string
+        numberTransaction:
+          type: string
+        validateBank:
+          type: string
+        reasonRejection:
+          type: string
+        modeCharged:
+          type: string
